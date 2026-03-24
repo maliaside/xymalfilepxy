@@ -24,3 +24,4 @@ http://fuTZv6kSTi80_custom_zone_KR_st__city_sid_90240024_time_0:2537036@change5.
 http://sD7kWtfLbp70_custom_zone_KR_st__city_sid_99487595_time_0:2537038@change5.owlproxy.com:7778
 http://KW91VAaTaL60_custom_zone_KR_st__city_sid_57465711_time_0:2537048@change5.owlproxy.com:7778
 http://RR5B7PDayQA0_custom_zone_KR_st__city_sid_99585843_time_0:2547143@change5.owlproxy.com:7778
+http://krGe7n5AJS60_custom_zone_KR_st__city_sid_02152359_time_0:2552413@change5.owlproxy.com:7778
