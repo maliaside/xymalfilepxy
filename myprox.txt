@@ -158,3 +158,4 @@ http://ERTtqJEPPO10_custom_zone_KR_st__city_sid_26309872_time_0:2553328@change5.
 http://x8z5HV35B320_custom_zone_KR_st__city_sid_96165368_time_0:2553329@change5.owlproxy.com:7778
 http://bP6S0Cz73g90_custom_zone_KR_st__city_sid_46565235_time_0:2553337@change5.owlproxy.com:7778
 http://g4uUW0n7SF10_custom_zone_KR_st__city_sid_96679364_time_0:2553339@change5.owlproxy.com:7778
+http://eSxm6P4ISk70_custom_zone_KR_st__city_sid_68083757_time_0:2553342@change5.owlproxy.com:7778
