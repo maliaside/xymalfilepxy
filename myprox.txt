@@ -301,3 +301,4 @@ http://IYwHb65mMM90_custom_zone_KR_st__city_sid_18956766_time_0:2554398@change5.
 http://XH8KFI0YQg10_custom_zone_KR_st__city_sid_57414351_time_0:2559085@change5.owlproxy.com:7778
 http://b2l3AI0APa90_custom_zone_KR_st__city_sid_16393826_time_0:2559087@change5.owlproxy.com:7778
 http://81CwDJGqx600_custom_zone_KR_st__city_sid_98585327_time_0:2559094@change5.owlproxy.com:7778
+http://JkfLR2A2bQ40_custom_zone_KR_st__city_sid_63931943_time_0:2559095@change5.owlproxy.com:7778
