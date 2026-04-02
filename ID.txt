@@ -320,3 +320,4 @@ http://mvwv0gsyDpA0_custom_zone_ID_st__city_sid_77712417_time_0:2613459@change5.
 http://08yk8dDOPJ60_custom_zone_ID_st__city_sid_06015708_time_0:2613465@change5.owlproxy.com:7778
 http://ZyAAjMEkTj10_custom_zone_ID_st__city_sid_64021217_time_0:2613469@change5.owlproxy.com:7778
 http://baqvAhmsCj10_custom_zone_ID_st__city_sid_35241044_time_0:2613470@change5.owlproxy.com:7778
+http://0SExJCAhUo40_custom_zone_ID_st__city_sid_54949692_time_0:2613472@change5.owlproxy.com:7778
