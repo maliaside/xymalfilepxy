@@ -2,7 +2,7 @@ name: Auto Run PHP Japan Proxy
 
 on:
   schedule:
-    - cron: "*/7 * * * *"   # tiap 7 menit
+    - cron: "*/60 * * * *"   # tiap 7 menit
   workflow_dispatch:
 
 jobs:
