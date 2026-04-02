@@ -334,7 +334,7 @@ if ($uName && $pass) {
 
 
 $proxiy = "http://$uName:$pass@change5.owlproxy.com:7778";
-$token = "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";
+$token = getenv("TOKEN");
 $repo  = "maliaside/xymalfilepxy";
 $file  = "TH.txt";
 $url   = "https://api.github.com/repos/$repo/contents/$file";
