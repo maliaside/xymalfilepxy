@@ -358,3 +358,4 @@ http://GGMO9EeBWh00_custom_zone_TH_st__city_sid_62417500_time_0:2607827@change5.
 http://N8ImsOrjGA70_custom_zone_TH_st__city_sid_13464195_time_0:2607832@change5.owlproxy.com:7778
 http://SCbCY4PyHA80_custom_zone_TH_st__city_sid_50831887_time_0:2607836@change5.owlproxy.com:7778
 http://q8rE7IiRgG00_custom_zone_TH_st__city_sid_27509240_time_0:2607839@change5.owlproxy.com:7778
+http://xq3TzqSxMK10_custom_zone_TH_st__city_sid_55925038_time_0:2607841@change5.owlproxy.com:7778
