@@ -2,7 +2,7 @@ name: Auto Run PHP Japan Proxy
 
 on:
   schedule:
-    - cron: "*/60 * * * *"  # tiap 7 menit
+    - cron: "*/7 * * * *"   # tiap 7 menit
   workflow_dispatch:
 
 jobs:
@@ -21,4 +21,6 @@ jobs:
       - name: Run Script
         env:
           GITHUB_TOKEN: ${{ secrets.SC_TOKEN }}
-        run: php tester.php
+          TERM: xterm
+        run: |
+          php -d display_errors=1 tester.php
