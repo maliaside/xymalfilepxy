@@ -1084,3 +1084,4 @@ http://B42HB6Mk1i20_custom_zone_TH_st__city_sid_62024569_time_0:2610151@change5.
 http://aP9sh82StC50_custom_zone_TH_st__city_sid_37912882_time_0:2610155@change5.owlproxy.com:7778
 http://Sr14Tbs9Pt30_custom_zone_TH_st__city_sid_69457150_time_0:2610156@change5.owlproxy.com:7778
 http://UF1zr1I2NY30_custom_zone_TH_st__city_sid_22114545_time_0:2610161@change5.owlproxy.com:7778
+http://HoBxd7cq1K70_custom_zone_TH_st__city_sid_22403808_time_0:2610162@change5.owlproxy.com:7778
