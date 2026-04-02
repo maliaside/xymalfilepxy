@@ -2,11 +2,6 @@
 error_reporting(0);
 system('clear');
 
-echo "[ 1 ] Proxy Hunter\n";
-echo "[ 2 ] Get Proxy From DB\n\n";
-$menu = input("[ ? ] pilih");
-
-if($menu == 1 ) {
 $url = "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/TH.txt";
 $data = file_get_contents($url);
 $proxies = explode("\n", $data);
@@ -391,42 +386,6 @@ echo "[✓] Simpan ke TXT Github [✓]\n";
 echo "$result\n\n";
 goto ulangRegist;
 
-    
-}elseif($menu == 2) {
-kodeOtp:
-$otp = input("[ ? ] Masukan Kode OTP");
-$data = '{"enteredCode":"'.$otp.'"}';
-    $lenght = strlen($data);
-    $headers = [
-        "Host: myproxymen.vercel.app",
-        "Content-Type: application/json",
-        "Origin: https://accounts.edot.id",
-        "Connection: keep-alive",
-        "Accept: */*",
-        "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 16_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/109.0.5414.83 Mobile/15E148 Safari/604.1",
-        "Content-Length: ".$lenght,
-        "Accept-Language: en-GB,en-US;q=0.9,en;q=0.8",
-        "Accept-Encoding: json"
-        
-    ];
-    
-    $getProxy = curl("https://myproxymen.vercel.app/get-proxy", $data, $headers); 
-    $proxynya  = get_between($getProxy[1], '"proxy":"', '","}');
-    if($proxynya) {
-    echo "[ + ] $proxynya\n\n";
-    
-    } else {
-    echo "[ ! ] KODE OTP SALAH! ( Hubungi admin untuk minta kode OTP! )\n";
-    goto kodeOtp;
-    
-    }
-    
-  } else {
-    echo "[ ! ] Gaada Pilihan..\n";
-    exit;
-    
-  }
-    
  
  function generateDid19(): string {
     // digit pertama 1–9 (tidak boleh 0)
