@@ -1674,3 +1674,4 @@ http://0kEQM5VWNn60_custom_zone_TH_st__city_sid_93665222_time_0:2611218@change5.
 http://u4LszPzcAE60_custom_zone_TH_st__city_sid_94415634_time_0:2611220@change5.owlproxy.com:7778
 http://PXzwSsZDUZA0_custom_zone_TH_st__city_sid_33621897_time_0:2611222@change5.owlproxy.com:7778
 http://JChUqUWrpR90_custom_zone_TH_st__city_sid_27545241_time_0:2611223@change5.owlproxy.com:7778
+http://yHUhlmnRYa40_custom_zone_TH_st__city_sid_48302046_time_0:2611224@change5.owlproxy.com:7778
