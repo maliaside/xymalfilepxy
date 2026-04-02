@@ -2,7 +2,7 @@
 error_reporting(0);
 system('clear');
 
-$url = "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/TH.txt";
+$url = "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/ID.txt";
 $data = file_get_contents($url);
 $proxies = explode("\n", $data);
 $proxies = array_filter(array_map('trim', $proxies));
@@ -285,7 +285,7 @@ if ($otp) {
     
     createUlang:
     echo "[ + ] Create Proxy..\n";
-    $data = '{"proxyType":"https","proxyHost":"change5.owlproxy.com:7778","countryCode":"TH","state":"","city":"","time":0,"goodNum":1,"format":"user:pass:ip:port"}';
+    $data = '{"proxyType":"https","proxyHost":"change5.owlproxy.com:7778","countryCode":"ID","state":"","city":"","time":0,"goodNum":1,"format":"user:pass:ip:port"}';
     $lenght = strlen($data);
     $headers = [
     "Host: api.owlproxy.com",
