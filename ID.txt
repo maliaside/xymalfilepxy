@@ -1224,3 +1224,4 @@ http://kGvTltCpoW10_custom_zone_ID_st__city_sid_15769051_time_0:2615814@change5.
 http://EznPaDO4eR90_custom_zone_ID_st__city_sid_65247507_time_0:2615815@change5.owlproxy.com:7778
 http://aZrtGeESuB50_custom_zone_ID_st__city_sid_12911635_time_0:2615817@change5.owlproxy.com:7778
 http://OXs1rNvKY770_custom_zone_ID_st__city_sid_44319002_time_0:2615818@change5.owlproxy.com:7778
+http://72N68QnF6e50_custom_zone_ID_st__city_sid_28940086_time_0:2615819@change5.owlproxy.com:7778
