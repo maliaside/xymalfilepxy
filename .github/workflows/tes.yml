@@ -20,5 +20,5 @@ jobs:
 
       - name: Run Script
         env:
-          TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: php tester.php
