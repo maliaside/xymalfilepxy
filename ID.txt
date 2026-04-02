@@ -255,3 +255,4 @@ http://fR5A1b1iyU30_custom_zone_ID_st__city_sid_11131594_time_0:2613279@change5.
 http://L6QnSxC66w20_custom_zone_ID_st__city_sid_21565721_time_0:2613281@change5.owlproxy.com:7778
 http://peDG5T5cc420_custom_zone_ID_st__city_sid_28062457_time_0:2613288@change5.owlproxy.com:7778
 http://aPSGYv58F080_custom_zone_ID_st__city_sid_58020567_time_0:2613289@change5.owlproxy.com:7778
+http://NHi7inPa9n30_custom_zone_ID_st__city_sid_50835092_time_0:2613293@change5.owlproxy.com:7778
