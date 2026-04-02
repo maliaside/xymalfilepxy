@@ -22,4 +22,4 @@ jobs:
         run: php -v
 
       - name: Run PHP Script
-        run: php index.php
+        run: php tester.php
