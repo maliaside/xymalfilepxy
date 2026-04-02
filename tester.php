@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 
-$url = "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/ID.txt";
+$url = "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/TH.txt";
 $data = file_get_contents($url);
 $proxies = explode("\n", $data);
 $proxies = array_filter(array_map('trim', $proxies));
