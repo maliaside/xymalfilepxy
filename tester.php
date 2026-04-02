@@ -1,6 +1,5 @@
 <?php
 error_reporting(0);
-system('clear');
 
 $url = "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/ID.txt";
 $data = file_get_contents($url);
