@@ -1,5 +1,7 @@
 <?php
 error_reporting(0);
+$maxRegist = 3;
+$totalRegist = 0;
 
 $url = "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/TH.txt";
 $data = file_get_contents($url);
@@ -284,7 +286,7 @@ if ($otp) {
     
     createUlang:
     echo "[ + ] Create Proxy..\n";
-    $data = '{"proxyType":"https","proxyHost":"change5.owlproxy.com:7778","countryCode":"ID","state":"","city":"","time":0,"goodNum":1,"format":"user:pass:ip:port"}';
+    $data = '{"proxyType":"https","proxyHost":"change5.owlproxy.com:7778","countryCode":"US","state":"","city":"","time":0,"goodNum":1,"format":"user:pass:ip:port"}';
     $lenght = strlen($data);
     $headers = [
     "Host: api.owlproxy.com",
@@ -335,7 +337,7 @@ if ($uName && $pass) {
 $proxiy = "http://$uName:$pass@change5.owlproxy.com:7778";
 $token = getenv("GITHUB_TOKEN");
 $repo  = "maliaside/xymalfilepxy";
-$file  = "ID.txt";
+$file  = "US.txt";
 $url   = "https://api.github.com/repos/$repo/contents/$file";
 
 /* ambil isi file */
@@ -383,6 +385,14 @@ curl_close($ch);
 
 echo "[✓] Simpan ke TXT Github [✓]\n";
 echo "$result\n\n";
+
+$totalRegist++;
+
+if ($totalRegist >= $maxRegist) {
+    echo "[✓] Selesai, sudah $totalRegist kali pendaftaran\n";
+    exit;
+}
+
 goto ulangRegist;
 
  
