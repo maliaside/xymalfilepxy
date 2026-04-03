@@ -2313,3 +2313,4 @@ http://0az2DY57Go00_custom_zone_ID_st__city_sid_41183544_time_0:2617595@change5.
 http://crXL9Iy15R90_custom_zone_ID_st__city_sid_11200936_time_0:2617596@change5.owlproxy.com:7778
 http://uMXsVhMZvs30_custom_zone_ID_st__city_sid_68860774_time_0:2617597@change5.owlproxy.com:7778
 http://DKAtHqtVs040_custom_zone_ID_st__city_sid_28852606_time_0:2617599@change5.owlproxy.com:7778
+http://ggGdj5G9Kz70_custom_zone_ID_st__city_sid_60543438_time_0:2617600@change5.owlproxy.com:7778
