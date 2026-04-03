@@ -1,6 +1,6 @@
 <?php
 error_reporting(0);
-$maxRegist = 3;
+$maxRegist = 100;
 $totalRegist = 0;
 
 $url = "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/TH.txt";
