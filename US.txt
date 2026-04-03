@@ -1710,3 +1710,4 @@ http://gPt0C26QP800_custom_zone_US_st__city_sid_35146165_time_0:2630297@change5.
 http://mtXrK6bC9d20_custom_zone_US_st__city_sid_10381756_time_0:2630303@change5.owlproxy.com:7778
 http://JuUPILIzeI60_custom_zone_US_st__city_sid_31942885_time_0:2630307@change5.owlproxy.com:7778
 http://X5sppT1b3O30_custom_zone_US_st__city_sid_78593967_time_0:2630312@change5.owlproxy.com:7778
+http://gQ6VeqTR1r40_custom_zone_US_st__city_sid_54262475_time_0:2630317@change5.owlproxy.com:7778
