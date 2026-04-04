@@ -193,3 +193,4 @@ http://OwIr9YF1Ed60_custom_zone_JP_st__city_sid_24724728_time_0:2642550@change5.
 http://L7zqhTMvfr60_custom_zone_JP_st__city_sid_88196304_time_0:2642558@change5.owlproxy.com:7778
 http://XwGFpHLGfy70_custom_zone_JP_st__city_sid_28711145_time_0:2642565@change5.owlproxy.com:7778
 http://Qv32BhThRX70_custom_zone_JP_st__city_sid_01452466_time_0:2642570@change5.owlproxy.com:7778
+http://blgDRfU2G910_custom_zone_JP_st__city_sid_89588216_time_0:2642574@change5.owlproxy.com:7778
