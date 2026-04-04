@@ -53,3 +53,4 @@ http://7EYjdytQAN30_custom_zone_JP_st__city_sid_52119961_time_0:2642017@change5.
 http://LuGDaFpgbo50_custom_zone_JP_st__city_sid_41859822_time_0:2642018@change5.owlproxy.com:7778
 http://USCnSYjIrn70_custom_zone_JP_st__city_sid_00971925_time_0:2642022@change5.owlproxy.com:7778
 http://EYQKIXnOtW50_custom_zone_JP_st__city_sid_83964624_time_0:2642021@change5.owlproxy.com:7778
+http://6xW9j3v5Hi70_custom_zone_JP_st__city_sid_24147078_time_0:2642028@change5.owlproxy.com:7778
