@@ -137,3 +137,4 @@ http://yUIGOFI9Zg40_custom_zone_JP_st__city_sid_63791144_time_0:2642322@change5.
 http://MdmF7SgETC80_custom_zone_JP_st__city_sid_26273482_time_0:2642325@change5.owlproxy.com:7778
 http://TfvGZ1A9kw20_custom_zone_JP_st__city_sid_92166871_time_0:2642331@change5.owlproxy.com:7778
 http://ypvzEU6Hss70_custom_zone_JP_st__city_sid_70905514_time_0:2642336@change5.owlproxy.com:7778
+http://IYFFWmz1P550_custom_zone_JP_st__city_sid_64640204_time_0:2642335@change5.owlproxy.com:7778
