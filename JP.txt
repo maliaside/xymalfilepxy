@@ -404,3 +404,4 @@ http://UzwevFJGEq70_custom_zone_JP_st__city_sid_61645696_time_0:2645691@change5.
 http://g2dxgwHiEU90_custom_zone_JP_st__city_sid_73264085_time_0:2645695@change5.owlproxy.com:7778
 http://w8OePYuOho60_custom_zone_JP_st__city_sid_67440280_time_0:2645698@change5.owlproxy.com:7778
 http://bRcaOdI8oz30_custom_zone_JP_st__city_sid_89315443_time_0:2645701@change5.owlproxy.com:7778
+http://TAHUE70ukc30_custom_zone_JP_st__city_sid_34486559_time_0:2645703@change5.owlproxy.com:7778
