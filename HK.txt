@@ -1246,3 +1246,4 @@ http://jwkyHKHpaJ00_custom_zone_HK_st__city_sid_33935357_time_0:2664870@change5.
 http://KRwzWmp07g10_custom_zone_HK_st__city_sid_60054781_time_0:2664871@change5.owlproxy.com:7778
 http://2zaZYAjkAh60_custom_zone_HK_st__city_sid_20259030_time_0:2664876@change5.owlproxy.com:7778
 http://C2fQtTsVFP00_custom_zone_HK_st__city_sid_71136790_time_0:2664885@change5.owlproxy.com:7778
+http://R9ZlOVHtkI80_custom_zone_HK_st__city_sid_28834184_time_0:2664890@change5.owlproxy.com:7778
