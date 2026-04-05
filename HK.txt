@@ -1300,3 +1300,4 @@ http://UESA6NyECZ80_custom_zone_HK_st__city_sid_69907704_time_0:2665156@change5.
 http://2WwHz0fuxbA0_custom_zone_HK_st__city_sid_88589912_time_0:2665793@change5.owlproxy.com:7778
 http://r2cCR0AMDbA0_custom_zone_HK_st__city_sid_18469819_time_0:2665798@change5.owlproxy.com:7778
 http://wNDvHnvtCu70_custom_zone_HK_st__city_sid_89682699_time_0:2665801@change5.owlproxy.com:7778
+http://QlFyWD2GPH60_custom_zone_HK_st__city_sid_49413042_time_0:2665803@change5.owlproxy.com:7778
