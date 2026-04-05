@@ -203,3 +203,4 @@ http://De0UEC1ljY80_custom_zone_HK_st__city_sid_05080046_time_0:2652051@change5.
 http://Hs9fRE8rAX40_custom_zone_HK_st__city_sid_25369772_time_0:2652056@change5.owlproxy.com:7778
 http://TRh68c8Nn930_custom_zone_HK_st__city_sid_85584063_time_0:2652062@change5.owlproxy.com:7778
 http://OxIl6WTuaZ40_custom_zone_HK_st__city_sid_43263823_time_0:2652065@change5.owlproxy.com:7778
+http://znKQY3hXQD50_custom_zone_HK_st__city_sid_61840078_time_0:2652072@change5.owlproxy.com:7778
