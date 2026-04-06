@@ -62,3 +62,4 @@ http://BmE1VPk1TG40_custom_zone_LA_st__city_sid_63272411_time_0:2678915@change5.
 http://NTjZU3cApH60_custom_zone_LA_st__city_sid_18878640_time_0:2678918@change5.owlproxy.com:7778
 http://KcrjwAASdJ00_custom_zone_LA_st__city_sid_21163049_time_0:2678932@change5.owlproxy.com:7778
 http://JB8HlQR84x70_custom_zone_LA_st__city_sid_02184131_time_0:2678941@change5.owlproxy.com:7778
+http://Mr1JI7vFDb90_custom_zone_LA_st__city_sid_60225883_time_0:2678954@change5.owlproxy.com:7778
