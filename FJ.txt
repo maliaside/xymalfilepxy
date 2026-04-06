@@ -50,3 +50,4 @@ http://dQrg2n6qco80_custom_zone_FJ_st__city_sid_43554545_time_0:2685000@change5.
 http://x7ptmD0oY760_custom_zone_FJ_st__city_sid_35689552_time_0:2685001@change5.owlproxy.com:7778
 http://9ZAfZdFqJ970_custom_zone_FJ_st__city_sid_81929462_time_0:2685005@change5.owlproxy.com:7778
 http://ZakD1OpsHIA0_custom_zone_FJ_st__city_sid_20797208_time_0:2685007@change5.owlproxy.com:7778
+http://QXYcE8f9tp70_custom_zone_FJ_st__city_sid_61346578_time_0:2685008@change5.owlproxy.com:7778
