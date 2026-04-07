@@ -365,3 +365,4 @@ http://WXlzqklmdQ70_custom_zone_FJ_st__city_sid_76683605_time_0:2685919@change5.
 http://njQuIU55Fn80_custom_zone_FJ_st__city_sid_70755574_time_0:2685930@change5.owlproxy.com:7778
 http://2MDNSJdHlW70_custom_zone_FJ_st__city_sid_49602177_time_0:2685933@change5.owlproxy.com:7778
 http://UKUnAD6kgp00_custom_zone_FJ_st__city_sid_04174437_time_0:2685940@change5.owlproxy.com:7778
+http://aAxcJpHTGY80_custom_zone_FJ_st__city_sid_77847278_time_0:2685953@change5.owlproxy.com:7778
