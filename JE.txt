@@ -93,3 +93,4 @@ http://bM4qhLCDsr20_custom_zone_JE_st__city_sid_80256199_time_0:2701234@change5.
 http://HrdpluKP7100_custom_zone_JE_st__city_sid_75233654_time_0:2701238@change5.owlproxy.com:7778
 http://79bFQ3ASp880_custom_zone_JE_st__city_sid_00059691_time_0:2701245@change5.owlproxy.com:7778
 http://Qlm45fuhab40_custom_zone_JE_st__city_sid_52943010_time_0:2701262@change5.owlproxy.com:7778
+http://STnAcvQ14w80_custom_zone_JE_st__city_sid_83813140_time_0:2701264@change5.owlproxy.com:7778
