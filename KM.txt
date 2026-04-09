@@ -116,3 +116,4 @@ http://FE8Fy6AUMG00_custom_zone_KM_st__city_sid_48152102_time_0:2730048@change5.
 http://RhFjWw7pKC10_custom_zone_KM_st__city_sid_76408764_time_0:2730051@change5.owlproxy.com:7778
 http://yZ5ZRGBobs00_custom_zone_KM_st__city_sid_87122576_time_0:2730054@change5.owlproxy.com:7778
 http://djq46OgkpL80_custom_zone_KM_st__city_sid_35138186_time_0:2730061@change5.owlproxy.com:7778
+http://nCdQjMH4pY80_custom_zone_KM_st__city_sid_69315220_time_0:2730064@change5.owlproxy.com:7778
