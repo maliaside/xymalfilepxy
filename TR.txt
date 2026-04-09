@@ -98,3 +98,4 @@ http://5uZ3Y3P64H20_custom_zone_TR_st__city_sid_25163260_time_0:2743002@change5.
 http://OqgUpv6FdA50_custom_zone_TR_st__city_sid_73156619_time_0:2743003@change5.owlproxy.com:7778
 http://kDBB6ZKlkP30_custom_zone_TR_st__city_sid_01802331_time_0:2743004@change5.owlproxy.com:7778
 http://Z9FdspWZyL50_custom_zone_TR_st__city_sid_51736626_time_0:2743007@change5.owlproxy.com:7778
+http://7MtbvsdOqz00_custom_zone_TR_st__city_sid_10274582_time_0:2743008@change5.owlproxy.com:7778
