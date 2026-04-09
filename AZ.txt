@@ -65,3 +65,4 @@ http://Ikh0Lww4I480_custom_zone_AZ_st__city_sid_44856352_time_0:2738502@change5.
 http://S3i9ETkqNIA0_custom_zone_AZ_st__city_sid_76225426_time_0:2738507@change5.owlproxy.com:7778
 http://NmTHGrMDoy50_custom_zone_AZ_st__city_sid_82097132_time_0:2738511@change5.owlproxy.com:7778
 http://T8QHkBlGLf30_custom_zone_AZ_st__city_sid_77742413_time_0:2738524@change5.owlproxy.com:7778
+http://aOsyahPBSN10_custom_zone_AZ_st__city_sid_04263232_time_0:2738528@change5.owlproxy.com:7778
