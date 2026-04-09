@@ -145,3 +145,4 @@ http://IKWXmFJqcQ30_custom_zone_MR_st__city_sid_77091729_time_0:2732500@change5.
 http://CUjKahGxb290_custom_zone_MR_st__city_sid_34927214_time_0:2732503@change5.owlproxy.com:7778
 http://JOpLOkM5tSA0_custom_zone_MR_st__city_sid_07550757_time_0:2732506@change5.owlproxy.com:7778
 http://KgklIfFcCu00_custom_zone_MR_st__city_sid_63392222_time_0:2732507@change5.owlproxy.com:7778
+http://HcF1FQqa6A60_custom_zone_MR_st__city_sid_75806568_time_0:2732512@change5.owlproxy.com:7778
