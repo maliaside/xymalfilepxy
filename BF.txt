@@ -49,3 +49,4 @@ http://4QxUxI7vvPA0_custom_zone_BF_st__city_sid_57469542_time_0:2740418@change5.
 http://HZCUqI7Ub090_custom_zone_BF_st__city_sid_67422253_time_0:2740423@change5.owlproxy.com:7778
 http://hvRSsDrxYq10_custom_zone_BF_st__city_sid_52345899_time_0:2740430@change5.owlproxy.com:7778
 http://LAwekGwq8Y60_custom_zone_BF_st__city_sid_97162413_time_0:2740435@change5.owlproxy.com:7778
+http://Cz8AVs046u90_custom_zone_BF_st__city_sid_77571792_time_0:2740437@change5.owlproxy.com:7778
