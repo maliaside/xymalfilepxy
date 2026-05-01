@@ -64,3 +64,4 @@ http://2h6tsx7Md010_custom_zone_SM_st__city_sid_08170190_time_0:2963046@change5.
 http://SatREdEnFF30_custom_zone_SM_st__city_sid_13006403_time_0:2963048@change5.owlproxy.com:7778
 http://hXXfCGOSys40_custom_zone_SM_st__city_sid_90925030_time_0:2963050@change5.owlproxy.com:7778
 http://ZAnxzvlGvkA0_custom_zone_SM_st__city_sid_72998907_time_0:2963051@change5.owlproxy.com:7778
+http://O17rgaGnZs90_custom_zone_SM_st__city_sid_22374697_time_0:2963059@change5.owlproxy.com:7778
