@@ -1,0 +1,1619 @@
+================================================================================
+BOT_24_7_CONTEXT.txt
+Dokumentasi Lengkap untuk Menjalankan Bot Telegram 24/7 via Devin
+================================================================================
+
+================================================================================
+1. RINGKASAN TUJUAN PROJECT
+================================================================================
+
+Project ini menjalankan 2 bot Telegram secara bersamaan:
+
+Bot 1: gpt.js (Node.js)
+  - Telegram bot untuk proses upgrade GPT Plus
+  - Menggunakan proxy dari GitHub raw file
+  - Bot token dari file .env
+
+Bot 2: bot.php (PHP)
+  - Telegram bot "Noxera AI" untuk generate AI video dan enhance foto HD
+  - Menggunakan DreamFace API
+  - Bot token hardcoded di dalam file
+
+ATURAN UTAMA:
+  - Bot harus dijalankan otomatis 24/7
+  - JANGAN berhenti sebelum user perintahkan STOP
+  - Jika session lama mati/error/terminate, buat session baru dan jalankan bot lagi
+  - Gunakan playbook agar instruksi bisa dipakai ulang
+
+================================================================================
+2. ISI FILE .env
+================================================================================
+
+BOT_TOKEN=8441271339:AAGmEwRxVL2che9CeiHds2Kc5lNn68TZZt0
+
+================================================================================
+3. ISI FILE gpt.js
+================================================================================
+
+require('dotenv').config();
+
+const { Telegraf } = require('telegraf');
+const axios = require('axios');
+const { HttpsProxyAgent } = require('https-proxy-agent');
+
+const bot = new Telegraf(process.env.BOT_TOKEN);
+
+const PAYMENT_URL = 'https://ezweystock.petrix.id/gpt/payment';
+const PROXY_LIST_URL =
+    'https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/Asia/TH.txt';
+
+let proxies = [];
+
+const E = {
+    tool: '\u{1F6E0}',
+    ok: '\u{2705}',
+    no: '\u{274C}',
+    wait: '\u{231B}',
+    globe: '\u{1F310}',
+    link: '\u{1F517}',
+    red: '\u{1F534}',
+    warn: '\u{26A0}\u{FE0F}',
+    rocket: '\u{1F680}',
+    reload: '\u{1F504}'
+};
+
+function escHTML(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+async function loadProxies() {
+    try {
+
+        const res = await axios.get(PROXY_LIST_URL, {
+            timeout: 15000
+        });
+
+        proxies = res.data
+            .split('\n')
+            .map(p => p.trim())
+            .filter(p => p.includes('://'));
+
+        console.log(`${E.ok} Loaded ${proxies.length} proxies`);
+
+    } catch (err) {
+
+        console.log(
+            `${E.no} Gagal load proxy: ${err.message}`
+        );
+    }
+}
+
+function getRandomProxy() {
+
+    if (proxies.length === 0) return null;
+
+    return proxies[
+        Math.floor(Math.random() * proxies.length)
+    ];
+}
+
+function getProxyIp(proxyUrl) {
+
+    try {
+
+        const u = new URL(proxyUrl);
+        return u.hostname;
+
+    } catch {
+
+        return proxyUrl;
+    }
+}
+
+async function checkProxy(proxyUrl) {
+
+    try {
+
+        const agent = new HttpsProxyAgent(proxyUrl);
+
+        const res = await axios.get(
+            'https://api.ipify.org?format=json',
+            {
+                httpsAgent: agent,
+                httpAgent: agent,
+                timeout: 10000
+            }
+        );
+
+        if (res.data?.ip) {
+
+            return {
+                active: true,
+                ip: res.data.ip,
+                agent
+            };
+        }
+
+        return {
+            active: false
+        };
+
+    } catch {
+
+        return {
+            active: false
+        };
+    }
+}
+
+function getPayload(session) {
+
+    return {
+        plan: 'plus',
+        payment: 'shortlink',
+        currency: 'Indonesia',
+        session: session
+    };
+}
+
+function getHeaders(withProxy = true) {
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'User-Agent':
+            'Mozilla/5.0 (Linux; Android 12; M2010J19SG Build/SKQ1.211202.001) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.137 Mobile Safari/537.36',
+        'Origin': 'https://ezweystock.petrix.id',
+        'Referer': 'https://ezweystock.petrix.id/gpt/',
+        'Accept': '*/*',
+        'Accept-Language':
+            'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7'
+    };
+
+    if (withProxy) {
+
+        headers['sec-ch-ua'] =
+            '"Android WebView";v="147", "Not.A/Brand";v="8", "Chromium";v="147"';
+
+        headers['sec-ch-ua-mobile'] = '?1';
+
+        headers['sec-ch-ua-platform'] =
+            '"Android"';
+
+        headers['X-Requested-With'] =
+            'mark.via.gp';
+    }
+
+    return headers;
+}
+
+function parseErrorMessage(msg) {
+
+    if (!msg)
+        return 'Unknown error';
+
+    if (
+        msg.includes(
+            'Could not parse your authentication token'
+        )
+    ) {
+
+        return `${E.red}session token kadaluwarsa, ambil lagi disini:\nhttps://chatgpt.com/api/auth/session`;
+    }
+
+    if (
+        msg.includes('Could not parse')
+    ) {
+
+        return `${E.red}session token kadaluwarsa, ambil lagi disini:\nhttps://chatgpt.com/api/auth/session`;
+    }
+
+    if (
+        msg.includes('Invalid access token')
+    ) {
+
+        return `${E.red}token gak valid\nsession salah atau sudah expired`;
+    }
+
+    return msg;
+}
+
+bot.start((ctx) => {
+
+    return ctx.reply(
+        `Upgrade GPT Plus Rp1\nsilahkan kirim session token yang aktif yeu`
+    );
+});
+
+bot.on('text', async (ctx) => {
+
+    const session =
+        ctx.message.text.trim();
+
+    if (session.length < 300) {
+
+        return ctx.reply(
+            `${E.no}token session terlalu pendek, cek lagi`
+        );
+    }
+
+    await ctx.reply(
+        `${E.wait}OK, proses (menggunakan proxy)`
+    );
+
+    let lastError = '';
+
+    for (let i = 0; i < 5; i++) {
+
+        const proxyUrl =
+            getRandomProxy();
+
+        if (!proxyUrl) {
+
+            lastError =
+                'Proxy kosong';
+
+            break;
+        }
+
+        console.log(
+            `${E.reload} Checking proxy: ${proxyUrl}`
+        );
+
+        const proxyCheck =
+            await checkProxy(proxyUrl);
+
+        if (!proxyCheck.active) {
+
+            console.log(
+                `Proxy mati: ${getProxyIp(proxyUrl)}`
+            );
+
+            continue;
+        }
+
+        await ctx.reply(
+            `${E.globe} OK, dapat ip: ${proxyCheck.ip}`
+        );
+
+        try {
+
+            const response =
+                await axios.post(
+                    PAYMENT_URL,
+                    getPayload(session),
+                    {
+                        httpsAgent:
+                            proxyCheck.agent,
+
+                        httpAgent:
+                            proxyCheck.agent,
+
+                        headers:
+                            getHeaders(true),
+
+                        timeout: 20000
+                    }
+                );
+
+            if (
+                response.data?.success &&
+                response.data?.url
+            ) {
+
+                await ctx.reply(
+                    `${E.ok} <b>OK, berhasil ambil link payment:</b>`,
+                    {
+                        parse_mode:
+                            'HTML'
+                    }
+                );
+
+                return ctx.reply(
+                    `${E.link} ${response.data.url}`
+                );
+            }
+
+            const msg =
+                response.data?.msg ||
+                response.data?.message ||
+                'Unknown';
+
+            const reply =
+                parseErrorMessage(msg);
+
+            return ctx.reply(
+                `${E.no} ${escHTML(reply)}`,
+                {
+                    parse_mode:
+                        'HTML'
+                }
+            );
+
+        } catch (err) {
+
+            if (err.response) {
+
+                const status =
+                    err.response.status;
+
+                const data =
+                    err.response.data || {};
+
+                const msg =
+                    data.msg ||
+                    data.message ||
+                    JSON.stringify(data);
+
+                console.log(
+                    'STATUS:',
+                    status
+                );
+
+                console.log(
+                    'DATA:',
+                    data
+                );
+
+                if (
+                    msg.includes(
+                        'Could not parse'
+                    ) ||
+                    msg.includes(
+                        'Invalid access token'
+                    )
+                ) {
+
+                    const reply =
+                        parseErrorMessage(msg);
+
+                    return ctx.reply(
+                        `${E.no} ${escHTML(reply)}`,
+                        {
+                            parse_mode:
+                                'HTML'
+                        }
+                    );
+                }
+
+                lastError =
+                    `HTTP ${status} | ${msg}`;
+
+            } else {
+
+                lastError =
+                    err.code ||
+                    err.message;
+            }
+
+            console.log(
+                `Attempt ${i + 1} failed: ${lastError}`
+            );
+        }
+    }
+
+    await ctx.reply(
+        `${E.warn} Semua proxy gagal, mencoba tanpa proxy...`
+    );
+
+    try {
+
+        const response =
+            await axios.post(
+                PAYMENT_URL,
+                getPayload(session),
+                {
+                    headers:
+                        getHeaders(false),
+
+                    timeout: 20000
+                }
+            );
+
+        if (
+            response.data?.success &&
+            response.data?.url
+        ) {
+
+            await ctx.reply(
+                `${E.ok} <b>Berhasil tanpa proxy!</b>`,
+                {
+                    parse_mode:
+                        'HTML'
+                }
+            );
+
+            return ctx.reply(
+                `${E.link} ${response.data.url}`
+            );
+        }
+
+        const msg =
+            response.data?.msg ||
+            response.data?.message ||
+            'Gagal tanpa proxy juga';
+
+        const reply =
+            parseErrorMessage(msg);
+
+        return ctx.reply(
+            `${E.no} ${escHTML(reply)}`,
+            {
+                parse_mode:
+                    'HTML'
+            }
+        );
+
+    } catch (err) {
+
+        let finalError = '';
+
+        if (err.response) {
+
+            const status =
+                err.response.status;
+
+            const data =
+                err.response.data || {};
+
+            const msg =
+                data.msg ||
+                data.message ||
+                JSON.stringify(data);
+
+            console.log(
+                'STATUS:',
+                status
+            );
+
+            console.log(
+                'DATA:',
+                data
+            );
+
+            finalError =
+                `HTTP ${status} | ${msg}`;
+
+        } else {
+
+            finalError =
+                err.code ||
+                err.message ||
+                lastError;
+        }
+
+        return ctx.reply(
+            `${E.no} Semua cara gagal.\n${escHTML(finalError)}`,
+            {
+                parse_mode:
+                    'HTML'
+            }
+        );
+    }
+});
+
+process.once(
+    'SIGINT',
+    () => bot.stop('SIGINT')
+);
+
+process.once(
+    'SIGTERM',
+    () => bot.stop('SIGTERM')
+);
+
+loadProxies()
+    .then(() => bot.launch())
+    .then(() => {
+
+        console.log(
+            `${E.rocket} Bot started`
+        );
+    })
+    .catch((err) => {
+
+        console.log(
+            `${E.no} Bot launch error: ${err.message}`
+        );
+    });
+
+================================================================================
+4. ISI FILE bot.php
+================================================================================
+
+<?php
+
+error_reporting(0);
+date_default_timezone_set("Asia/Jakarta");
+ob_implicit_flush(true);
+
+/*
+|--------------------------------------------------------------------------
+| CONFIG
+|--------------------------------------------------------------------------
+*/
+
+$botToken = "8761128284:AAFuC9A0MOa7lR0eD72zVYP_Fkcgfr-pCJ0";
+$api      = "https://api.telegram.org/bot".$botToken;
+$imgbbKey = "5334b33ff8290938c8df0e8c13f7d1bd";
+
+/*
+|--------------------------------------------------------------------------
+| WORKER MODE
+|--------------------------------------------------------------------------
+*/
+
+if(isset($argv[1]) && $argv[1] == "worker"){
+
+    $chat_id = $argv[2] ?? null;
+    $text    = base64_decode($argv[3] ?? "");
+    $file_id = base64_decode($argv[4] ?? "");
+    $mode    = $argv[5] ?? "create";
+
+    if($chat_id && $text){
+        if($mode == "enhance"){
+            processEnhance($chat_id, $text, $file_id ?: null);
+        } else {
+            processGenerate($chat_id, $text, $file_id ?: null);
+        }
+    }
+
+    exit;
+}
+
+echo "[ + ] DreamFace Multi User Bot Running...\n";
+
+if(!is_dir("sessions")){
+    mkdir("sessions");
+}
+
+/*
+|--------------------------------------------------------------------------
+| MAIN LOOP
+|--------------------------------------------------------------------------
+*/
+
+$offset = 0;
+
+while(true){
+
+    $res = @file_get_contents(
+        $api."/getUpdates?offset=".$offset."&timeout=25"
+    );
+
+    if(!$res){
+        echo "[ ! ] Telegram Connection Error\n";
+        sleep(3);
+        continue;
+    }
+
+    $req = json_decode($res, true);
+
+    if(!$req || !isset($req['ok'])){
+        echo "[ ! ] Telegram JSON Error\n";
+        sleep(3);
+        continue;
+    }
+
+    foreach($req['result'] as $update){
+
+        $offset = $update['update_id'] + 1;
+
+        if(!isset($update['message'])){
+            continue;
+        }
+
+        $chat_id = $update['message']['chat']['id'] ?? null;
+
+        if(!$chat_id){
+            continue;
+        }
+
+        $photo   = $update['message']['photo'] ?? null;
+        $caption = trim($update['message']['caption'] ?? "");
+        $text    = trim($update['message']['text'] ?? "");
+        $file_id = null;
+
+        if($photo){
+            $largest = end($photo);
+            $file_id = $largest['file_id'] ?? null;
+            $text    = $caption;
+        }
+
+        if(!$text && !$photo){
+            continue;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | START
+        |--------------------------------------------------------------------------
+        */
+
+        if($text == "/start"){
+
+            sendMessage($chat_id,
+"Noxera AI Bot Free
+
+Command:
+━━━━━━━━━━━━━━━━
+🎬 AI VIDEO 480p/10s
+kirim foto + prompt ( di caption )
+
+━━━━━━━━━━━━━━━━
+✨ HD FOTO
+format: /hdin ( langsung kirim foto )
+
+━━━━━━━━━━━━━━━━
+/cancel = reset proses aktif");
+
+            continue;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CANCEL
+        |--------------------------------------------------------------------------
+        */
+
+        if($text == "/cancel"){
+
+            $lock = "sessions/".$chat_id.".lock";
+
+            if(file_exists($lock)){
+                @unlink($lock);
+                sendMessage($chat_id, "✅ Session berhasil direset");
+            } else {
+                sendMessage($chat_id, "⚠️ Tidak ada proses aktif");
+            }
+
+            continue;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | HDIN - TOGGLE AUTO ENHANCE MODE
+        |--------------------------------------------------------------------------
+        */
+
+        if($text == "/hdin"){
+
+            $hdinFile = "sessions/".$chat_id.".hdin";
+
+            if(file_exists($hdinFile)){
+                @unlink($hdinFile);
+                sendMessage($chat_id,
+"✨ HD FOTO: OFF ❌
+
+ketik /hdin lagi untuk aktifkan");
+            } else {
+                file_put_contents($hdinFile, "1");
+                sendMessage($chat_id,
+"✨ HD FOTO: ON ✅
+
+> silahkan kirim foto <
+ketik /hdin lagi untuk matikan.");
+            }
+
+            continue;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | AUTO ENHANCE (foto tanpa caption, mode hdin aktif)
+        |--------------------------------------------------------------------------
+        */
+
+        if($photo && !$text && file_exists("sessions/".$chat_id.".hdin")){
+
+            $lock = "sessions/".$chat_id.".lock";
+
+            if(file_exists($lock)){
+
+                $age = time() - filemtime($lock);
+
+                if($age > 30){
+                    @unlink($lock);
+                } else {
+                    sendMessage($chat_id, "⚠️ Proses sebelumnya masih berjalan\n\nKetik /cancel untuk reset");
+                    continue;
+                }
+            }
+
+            file_put_contents($lock, time());
+
+            sendMessage($chat_id, "✅ siap, proses\n⏩ auto enhance...");
+
+            $php  = PHP_BINARY;
+            $file = escapeshellarg(__FILE__);
+
+            $cmd =
+                $php." ".$file.
+                " worker ".
+                escapeshellarg($chat_id)." ".
+                escapeshellarg(base64_encode("__enhance__"))." ".
+                escapeshellarg(base64_encode($file_id ?? ""))." ".
+                escapeshellarg("enhance").
+                " > /dev/null 2>&1 &";
+
+            exec($cmd);
+
+            continue;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | AUTO VIDEO (foto + caption = prompt)
+        |--------------------------------------------------------------------------
+        */
+
+        if($photo && $text && strpos($text, "/") !== 0){
+
+            $lock = "sessions/".$chat_id.".lock";
+
+            if(file_exists($lock)){
+
+                $age = time() - filemtime($lock);
+
+                if($age > 30){
+                    @unlink($lock);
+                } else {
+                    sendMessage($chat_id, "⚠️ Generate sebelumnya masih berjalan\n\nKetik /cancel untuk reset");
+                    continue;
+                }
+            }
+
+            file_put_contents($lock, time());
+
+            sendMessage($chat_id, "✅ siap, proses\n⏩ next step...");
+
+            $php  = PHP_BINARY;
+            $file = escapeshellarg(__FILE__);
+
+            $cmd =
+                $php." ".$file.
+                " worker ".
+                escapeshellarg($chat_id)." ".
+                escapeshellarg(base64_encode($text))." ".
+                escapeshellarg(base64_encode($file_id ?? ""))." ".
+                escapeshellarg("create").
+                " > /dev/null 2>&1 &";
+
+            exec($cmd);
+
+            continue;
+        }
+    }
+
+    echo "[ ".date("H:i:s")." ] Ping\n";
+
+    @file_get_contents($api."/getMe");
+
+    sleep(5);
+}
+
+/*
+|--------------------------------------------------------------------------
+| PROCESS GENERATE VIDEO
+|--------------------------------------------------------------------------
+*/
+
+function processGenerate($chat_id, $text, $file_id = null)
+{
+    $lock = "sessions/".$chat_id.".lock";
+
+    try {
+
+        $delete_url = null;
+
+        if($file_id){
+            $prompt    = trim($text);
+            $link_poto = null;
+        } else {
+            $exp       = explode(" > ", $text);
+            $prompt    = trim($exp[0] ?? "");
+            $link_poto = trim($exp[1] ?? "");
+        }
+
+        if(!$prompt){
+            sendMessage($chat_id, "❌ Prompt tidak boleh kosong");
+            @unlink($lock);
+            return;
+        }
+
+        $msg        = sendMessage($chat_id, "⏳ cek verifying...");
+        $message_id = $msg['result']['message_id'] ?? 0;
+
+        if($file_id){
+
+            editMessage($chat_id, $message_id, "⏳ scan foto");
+
+            $upload = uploadToImgBB($file_id);
+
+            if(!$upload){
+                editMessage($chat_id, $message_id, "❌ scan foto gagal");
+                @unlink($lock);
+                return;
+            }
+
+            $link_poto  = $upload['url'];
+            $delete_url = $upload['delete_url'];
+
+            editMessage($chat_id, $message_id, "✅ OK, scan foto success");
+        }
+
+        if(!$link_poto){
+            editMessage($chat_id, $message_id, "❌ URL foto ga valid");
+            @unlink($lock);
+            return;
+        }
+
+        $account = registerAccount($chat_id, $message_id);
+
+        if(!$account){
+            deleteFromImgBB($delete_url);
+            @unlink($lock);
+            return;
+        }
+
+        [$account_id, $user_id, $token, $proxy, $saveHeaders, $timestamp] = $account;
+
+        if(!checkCredit($chat_id, $message_id, $account_id, $user_id, $saveHeaders, $proxy)){
+            deleteFromImgBB($delete_url);
+            @unlink($lock);
+            return;
+        }
+
+        $data = '{
+          "template_id":"6731a5618585a4000726feff",
+          "app_version":"5.3.0",
+          "timestamp":'.$timestamp.',
+          "play_types":["WAN","AI_SOUND"],
+          "user_id":"'.$user_id.'",
+          "no_water_mark":0,
+          "ext":{
+            "animate_channel":"imgToVideo",
+            "sing_title":"'.$prompt.'"
+          },
+          "photo_info_list":[
+            {
+              "photo_path":"'.$link_poto.'"
+            }
+          ],
+          "vidu_info":{
+            "duration":10,
+            "prompts":[
+              {
+                "content":"'.$prompt.'",
+                "type":"text"
+              }
+            ],
+            "style":"general",
+            "type":"img2video",
+            "model_version":"wan2.1",
+            "resolution":"480p",
+            "movement_amplitude":"auto"
+          },
+          "merge_by_server":false,
+          "account_id":"'.$account_id.'",
+          "pt_infos":[],
+          "work_type":"AI_VIDEO",
+          "create_work_session":true,
+          "effect_enable":true,
+          "platform_type":"MOBILE",
+          "tenant_name":"dream_face"
+        }';
+
+        editMessage($chat_id, $message_id, "⏳sedang generate video, ditunggu aja...");
+
+        $create = curlReq(
+            "https://www.dreamfaceapp.com/dw-server/face/animate_image_web",
+            $data,
+            $saveHeaders,
+            $proxy
+        );
+
+        file_put_contents("create.txt", $create);
+
+        $animate_id = get_between($create, '"animate_image_id":"', '","');
+
+        if(!$animate_id){
+            editMessage($chat_id, $message_id, "❌ Generate gagal");
+            deleteFromImgBB($delete_url);
+            @unlink($lock);
+            return;
+        }
+
+        $start = time();
+
+        while(true){
+
+            $data = '{
+                "account_id":"'.$account_id.'",
+                "user_id":"'.$user_id.'",
+                "page":1,
+                "size":30,
+                "session_type":"AI_VIDEO",
+                "platform_type":"MOBILE",
+                "tenant_name":"dream_face"
+            }';
+
+            $result = curlReq(
+                "https://www.dreamfaceapp.com/dw-server/work_session/list",
+                $data,
+                $saveHeaders,
+                $proxy
+            );
+
+            $status = get_between($result, '"session_status":', ',');
+            $video  = get_between($result, '"video_urls":["', '"');
+
+            if($status == 200 && $video){
+
+                editMessage($chat_id, $message_id, "✅ OK, video jadi siap kirim");
+
+                sendVideo($chat_id, $video, "🎬 480p/10s");
+
+                deleteFromImgBB($delete_url);
+
+                @unlink($lock);
+
+                return;
+            }
+
+            if($status == -3){
+                editMessage($chat_id, $message_id, "❌ Credit habis");
+                deleteFromImgBB($delete_url);
+                @unlink($lock);
+                return;
+            }
+
+            if(time() - $start > 1800){
+                editMessage($chat_id, $message_id, "❌ Generate timeout");
+                deleteFromImgBB($delete_url);
+                @unlink($lock);
+                return;
+            }
+
+            sleep(5);
+        }
+
+    } catch(Exception $e){
+
+        sendMessage($chat_id, "❌ Bot Error");
+
+        @unlink($lock);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| PROCESS ENHANCE PHOTO
+|--------------------------------------------------------------------------
+*/
+
+function processEnhance($chat_id, $text, $file_id = null)
+{
+    $lock = "sessions/".$chat_id.".lock";
+
+    try {
+
+        $msg        = sendMessage($chat_id, "⏳ cek verifying...");
+        $message_id = $msg['result']['message_id'] ?? 0;
+
+        $delete_url = null;
+
+        if($file_id){
+
+            editMessage($chat_id, $message_id, "⏳ scan foto...");
+
+            $upload = uploadToImgBB($file_id);
+
+            if(!$upload){
+                editMessage($chat_id, $message_id, "❌ scan foto gagal");
+                @unlink($lock);
+                return;
+            }
+
+            $link_poto  = $upload['url'];
+            $delete_url = $upload['delete_url'];
+
+            editMessage($chat_id, $message_id, "✅ OK, scan foto success");
+
+        } else {
+
+            $exp       = explode(" > ", $text);
+            $link_poto = trim($exp[1] ?? "");
+
+            if(!$link_poto){
+                editMessage($chat_id, $message_id, "❌ URL foto gak valid");
+                @unlink($lock);
+                return;
+            }
+        }
+
+        $account = registerAccount($chat_id, $message_id);
+
+        if(!$account){
+            deleteFromImgBB($delete_url);
+            @unlink($lock);
+            return;
+        }
+
+        [$account_id, $user_id, $token, $proxy, $saveHeaders, $timestamp] = $account;
+
+        if(!checkCredit($chat_id, $message_id, $account_id, $user_id, $saveHeaders, $proxy)){
+            deleteFromImgBB($delete_url);
+            @unlink($lock);
+            return;
+        }
+
+        editMessage($chat_id, $message_id, "⏳ sedang HDin foto, tunggu aja...");
+
+        $data = '{
+          "user_id":"'.$user_id.'",
+          "account_id":"'.$account_id.'",
+          "photo_info_list":[{"photo_path":"'.$link_poto.'"}],
+          "play_types":["ENHANCE"],
+          "ext":{"sing_title":"Photo Enhance"},
+          "work_type":"PHOTO_ENHANCER",
+          "template_id":"6673981149d3810007f3c6ce",
+          "app_version":"4.7.1",
+          "platform_type":"MOBILE",
+          "tenant_name":"dream_face",
+          "platformType":"MOBILE",
+          "tenantName":"dream_face"
+        }';
+
+        $create = curlReq(
+            "https://www.dreamfaceapp.com/dw-server/face/animate_image",
+            $data,
+            $saveHeaders,
+            $proxy
+        );
+
+        file_put_contents("enhance.txt", $create);
+
+        $animate_id = get_between($create, '"animate_image_id":"', '","');
+
+        if(!$animate_id){
+            editMessage($chat_id, $message_id, "❌ Enhance gagal dimulai");
+            deleteFromImgBB($delete_url);
+            @unlink($lock);
+            return;
+        }
+
+        $start = time();
+
+        while(true){
+
+            $pollData = '{
+                "user_id":"'.$user_id.'",
+                "account_id":"'.$account_id.'",
+                "animate_id_list":["'.$animate_id.'"],
+                "platform_type":"MOBILE",
+                "tenant_name":"dream_face",
+                "platformType":"MOBILE",
+                "tenantName":"dream_face"
+            }';
+
+            $pollRes = curlReq(
+                "https://www.dreamfaceapp.com/dw-server/face/animate_image_list_poll",
+                $pollData,
+                $saveHeaders,
+                $proxy
+            );
+
+            $state  = get_between($pollRes, '"state":"', '"');
+            $result = get_between($pollRes, '"picture_path_list":["', '"');
+
+            if($state == "finish" && $result){
+
+                editMessage($chat_id, $message_id, "✅ OK, foto siap dikirim");
+
+                sendPhoto($chat_id, $result, "✨ HD FOTO");
+
+                deleteFromImgBB($delete_url);
+
+                @unlink($lock);
+
+                return;
+            }
+
+            if($state == "fail"){
+                editMessage($chat_id, $message_id, "❌ Enhance gagal");
+                deleteFromImgBB($delete_url);
+                @unlink($lock);
+                return;
+            }
+
+            if(time() - $start > 1800){
+                editMessage($chat_id, $message_id, "❌ Enhance timeout");
+                deleteFromImgBB($delete_url);
+                @unlink($lock);
+                return;
+            }
+
+            sleep(5);
+        }
+
+    } catch(Exception $e){
+
+        sendMessage($chat_id, "❌ Bot Error");
+
+        @unlink($lock);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| REGISTER ACCOUNT (shared)
+|--------------------------------------------------------------------------
+*/
+
+function registerAccount($chat_id, $message_id)
+{
+    editMessage($chat_id, $message_id, "⏳ cek verifying...");
+
+    $proxyData = @file_get_contents(
+        "https://raw.githubusercontent.com/maliaside/xymalfilepxy/refs/heads/main/Asia/SG.txt"
+    );
+
+    if(!$proxyData){
+        editMessage($chat_id, $message_id, "❌ Proxy gagal diambil");
+        return null;
+    }
+
+    $proxies = array_filter(array_map('trim', explode("\n", $proxyData)));
+
+    if(!$proxies){
+        editMessage($chat_id, $message_id, "❌ Proxy kosong");
+        return null;
+    }
+
+    $proxy     = $proxies[array_rand($proxies)];
+    $devId     = generateRandomString(32);
+    $timestamp = round(microtime(true) * 1000);
+    $username  = "user".rand(1111,9999);
+    $email     = strtolower($username).$devId."@gmail.com";
+
+    $data = '{"password":"Ppsm@100","user_id":"'.$devId.'","third_id":"'.$email.'","third_platform":"EMAIL","third_ext":{"email":"'.$email.'"},"register_source":null,"platform_type":"MOBILE","tenant_name":"dream_face","platformType":"MOBILE","tenantName":"dream_face"}';
+
+    $headers = [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Host: www.dreamfaceapp.com",
+        "Accept-Encoding: json",
+        "Connection: Keep-Alive",
+        "Keep-Alive: timeout=21",
+        "TE: identity",
+        "User-Agent: com.Tivadar.Best.HTTP v3.0.15.0/Unity 6000.3.11f1",
+        "Content-Length: ".strlen($data)
+    ];
+
+    $reg = curlReq(
+        "https://www.dreamfaceapp.com/dw-server/user/login",
+        $data,
+        $headers,
+        $proxy
+    );
+
+    $account_id = get_between($reg, '"account_id":"', '","');
+    $user_id    = get_between($reg, '"user_id":"', '","');
+    $token      = get_between($reg, '"token":"', '","');
+
+    if(!$account_id || !$user_id || !$token){
+        file_put_contents("reg_fail.txt", $reg);
+        editMessage($chat_id, $message_id, "❌ verify gagal, ulangi lagi coba");
+        return null;
+    }
+
+    $saveData = '{
+        "device_system":"PC-Mobile",
+        "device_name":"PC-Mobile",
+        "user_id":"'.$user_id.'",
+        "account_id":"'.$account_id.'",
+        "app_version":"4.7.1",
+        "time_zone":7,
+        "platform_type":"MOBILE",
+        "tenant_name":"dream_face"
+    }';
+
+    $saveHeaders = [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "token: ".$token,
+        "Host: www.dreamfaceapp.com",
+        "Accept-Encoding: json",
+        "Connection: Keep-Alive",
+        "User-Agent: com.Tivadar.Best.HTTP v3.0.15.0/Unity 6000.3.11f1"
+    ];
+
+    curlReq(
+        "https://www.dreamfaceapp.com/dw-server/user/save_user_login",
+        $saveData,
+        $saveHeaders,
+        $proxy
+    );
+
+    editMessage($chat_id, $message_id, "✅ OK, verifying success");
+
+    return [$account_id, $user_id, $token, $proxy, $saveHeaders, $timestamp];
+}
+
+/*
+|--------------------------------------------------------------------------
+| CHECK CREDIT (shared)
+|--------------------------------------------------------------------------
+*/
+
+function checkCredit($chat_id, $message_id, $account_id, $user_id, $saveHeaders, $proxy)
+{
+    editMessage($chat_id, $message_id, "⏳ check credit...");
+
+    for($x=0; $x<15; $x++){
+
+        $data = '{
+            "account_id":"'.$account_id.'",
+            "user_id":"'.$user_id.'",
+            "time_zone":"",
+            "platform_type":"MOBILE",
+            "tenant_name":"dream_face"
+        }';
+
+        $creditReq = curlReq(
+            "https://www.dreamfaceapp.com/dw-server/credits/get_remaining_credits",
+            $data,
+            $saveHeaders,
+            $proxy
+        );
+
+        $credit = get_between($creditReq, '"free_count":', ',');
+
+        if($credit >= 1){
+            editMessage($chat_id, $message_id, "✅ credit available");
+            return true;
+        }
+    }
+
+    editMessage($chat_id, $message_id, "❌ Credit tidak tersedia");
+
+    return false;
+}
+
+/*
+|--------------------------------------------------------------------------
+| UPLOAD FILE KE IMGBB
+|--------------------------------------------------------------------------
+*/
+
+function uploadToImgBB($file_id)
+{
+    global $api, $botToken, $imgbbKey;
+
+    $res  = @file_get_contents($api."/getFile?file_id=".urlencode($file_id));
+    $data = json_decode($res, true);
+
+    $file_path = $data['result']['file_path'] ?? null;
+
+    if(!$file_path){
+        return null;
+    }
+
+    $file_url = "https://api.telegram.org/file/bot".$botToken."/".$file_path;
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, "https://api.imgbb.com/1/upload?key=".urlencode($imgbbKey));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(['image' => $file_url]));
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    $res  = curl_exec($ch);
+    curl_close($ch);
+
+    $json = json_decode($res, true);
+
+    if(!empty($json['data']['url'])){
+        return [
+            'url'        => $json['data']['url'],
+            'delete_url' => $json['data']['delete_url'] ?? null
+        ];
+    }
+
+    $image_data = @file_get_contents($file_url);
+
+    if(!$image_data){
+        return null;
+    }
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, "https://api.imgbb.com/1/upload?key=".urlencode($imgbbKey));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(['image' => base64_encode($image_data)]));
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    $res  = curl_exec($ch);
+    curl_close($ch);
+
+    $json = json_decode($res, true);
+
+    if(!empty($json['data']['url'])){
+        return [
+            'url'        => $json['data']['url'],
+            'delete_url' => $json['data']['delete_url'] ?? null
+        ];
+    }
+
+    return null;
+}
+
+/*
+|--------------------------------------------------------------------------
+| DELETE DARI IMGBB
+|--------------------------------------------------------------------------
+*/
+
+function deleteFromImgBB($delete_url)
+{
+    if(!$delete_url){
+        return;
+    }
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $delete_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    curl_exec($ch);
+    curl_close($ch);
+}
+
+/*
+|--------------------------------------------------------------------------
+| TELEGRAM
+|--------------------------------------------------------------------------
+*/
+
+function bot($method, $data = [])
+{
+    global $api;
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $api.'/'.$method);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+    $res = curl_exec($ch);
+
+    curl_close($ch);
+
+    return json_decode($res, true);
+}
+
+function sendMessage($chat_id, $text)
+{
+    return bot("sendMessage", [
+        "chat_id" => $chat_id,
+        "text"    => $text
+    ]);
+}
+
+function editMessage($chat_id, $message_id, $text)
+{
+    return bot("editMessageText", [
+        "chat_id"    => $chat_id,
+        "message_id" => $message_id,
+        "text"       => $text
+    ]);
+}
+
+function sendVideo($chat_id, $video, $caption = "")
+{
+    return bot("sendVideo", [
+        "chat_id" => $chat_id,
+        "video"   => $video,
+        "caption" => $caption
+    ]);
+}
+
+function sendPhoto($chat_id, $photo, $caption = "")
+{
+    return bot("sendPhoto", [
+        "chat_id" => $chat_id,
+        "photo"   => $photo,
+        "caption" => $caption
+    ]);
+}
+
+function curlReq($url, $post = null, $headers = [], $proxy = null)
+{
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+
+    if($post){
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+    }
+
+    if($headers){
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    }
+
+    if($proxy){
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, true);
+    }
+
+    $res = curl_exec($ch);
+
+    curl_close($ch);
+
+    return $res;
+}
+
+function get_between($string, $start, $end)
+{
+    $string = " ".$string;
+    $ini    = strpos($string, $start);
+
+    if($ini === false){
+        return "";
+    }
+
+    $ini += strlen($start);
+    $len  = strpos($string, $end, $ini);
+
+    if($len === false){
+        return "";
+    }
+
+    return substr($string, $ini, $len - $ini);
+}
+
+function generateRandomString($length = 10)
+{
+    $characters       = 'abcdef0123456789';
+    $charactersLength = strlen($characters);
+    $randomString     = '';
+
+    for($i = 0; $i < $length; $i++){
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+
+    return $randomString;
+}
+
+
+================================================================================
+5. CARA MENJALANKAN BOT
+================================================================================
+
+A. Install Dependencies:
+
+   # Buat folder kerja
+   mkdir -p /home/ubuntu/bots
+   cd /home/ubuntu/bots
+
+   # Buat file .env, gpt.js, bot.php (salin dari dokumentasi di atas)
+
+   # Install Node.js dependencies untuk gpt.js
+   npm init -y
+   npm install telegraf axios https-proxy-agent dotenv
+
+   # Install PHP untuk bot.php
+   sudo apt-get update -qq
+   sudo apt-get install -y -qq php-cli php-curl php-json php-mbstring
+
+B. Command Run Bot:
+
+   # Jalankan gpt.js (Node.js bot)
+   cd /home/ubuntu/bots && node gpt.js &
+
+   # Jalankan bot.php (PHP bot)
+   cd /home/ubuntu/bots && php bot.php &
+
+C. Command Restart Jika Error (gunakan script run_bots.sh):
+
+   #!/bin/bash
+   # Script: /home/ubuntu/bots/run_bots.sh
+   cd /home/ubuntu/bots
+
+   while true; do
+       echo "[$(date)] Starting gpt.js..."
+       node gpt.js &
+       GPT_PID=$!
+
+       echo "[$(date)] Starting bot.php..."
+       php bot.php &
+       PHP_PID=$!
+
+       echo "[$(date)] Bots running: gpt.js=$GPT_PID, bot.php=$PHP_PID"
+
+       # Tunggu salah satu proses mati
+       wait -n $GPT_PID $PHP_PID 2>/dev/null
+
+       echo "[$(date)] Bot crashed! Restarting in 5s..."
+
+       # Kill semua proses bot yang masih jalan
+       kill $GPT_PID $PHP_PID 2>/dev/null
+       wait $GPT_PID $PHP_PID 2>/dev/null
+
+       sleep 5
+   done
+
+   # Jalankan script:
+   chmod +x /home/ubuntu/bots/run_bots.sh
+   bash /home/ubuntu/bots/run_bots.sh
+
+D. Cara Cek Log:
+
+   # Cek proses yang jalan
+   ps aux | grep -E "gpt.js|bot.php" | grep -v grep
+
+   # Jika pakai run_bots.sh di background:
+   # Redirect output ke log file:
+   bash /home/ubuntu/bots/run_bots.sh > /home/ubuntu/bots/bot.log 2>&1 &
+
+   # Cek log:
+   tail -f /home/ubuntu/bots/bot.log
+
+================================================================================
+6. CATATAN ERROR YANG PERNAH MUNCUL
+================================================================================
+
+- Shell sempat error "connection unavailable" saat session restart
+  Solusi: Retry/wait sampai shell pulih, biasanya 5-10 detik
+
+- bot.php kadang menampilkan "[ ! ] Telegram Connection Error"
+  Solusi: Ini normal, bot akan auto-retry setiap 3 detik
+
+- gpt.js menampilkan deprecation warning tentang punycode module
+  Solusi: Bisa diabaikan, tidak mempengaruhi fungsi bot
+
+- gpt.js menampilkan ExperimentalWarning tentang CommonJS loading ES Module
+  Solusi: Bisa diabaikan, tidak mempengaruhi fungsi bot
+
+================================================================================
+7. INSTRUKSI UNTUK SESSION DEVIN BERIKUTNYA
+================================================================================
+
+Baca file BOT_24_7_CONTEXT.txt ini, buat ulang semua file yang diperlukan
+(gpt.js, bot.php, .env), install dependency, lalu jalankan bot 24/7
+sampai saya perintahkan stop.
+
+Langkah detail:
+1. Buat folder /home/ubuntu/bots
+2. Buat file /home/ubuntu/bots/.env dengan isi dari bagian 2
+3. Buat file /home/ubuntu/bots/gpt.js dengan isi dari bagian 3
+4. Buat file /home/ubuntu/bots/bot.php dengan isi dari bagian 4
+5. Buat file /home/ubuntu/bots/run_bots.sh dengan isi dari bagian 5C
+6. Install dependencies:
+   - npm init -y && npm install telegraf axios https-proxy-agent dotenv
+   - sudo apt-get install -y php-cli php-curl php-json php-mbstring
+7. Jalankan: bash /home/ubuntu/bots/run_bots.sh
+8. Monitor log untuk pastikan kedua bot berjalan
+9. JANGAN berhenti kecuali user bilang STOP
+
+================================================================================
+END OF DOCUMENT
+================================================================================
